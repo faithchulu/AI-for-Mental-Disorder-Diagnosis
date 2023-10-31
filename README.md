@@ -1,1 +1,1 @@
-gi
+A machine learning model to diagnose different types of mental disorders in various individuals
