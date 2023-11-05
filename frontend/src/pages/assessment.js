@@ -5,6 +5,7 @@ import BG from "../assets/images/image6.jpg"
 
 
 const questionsList = [
+  "How old are you?",
   "Do you feel often nervous?",
   "Do you feel often panic?",
   "Do you get sudden bursts of rapid breathing?",
@@ -38,19 +39,57 @@ const questionsList = [
 
 const Assessment = () => {
   const [step, setStep] = useState(0);
-  const [answers, setAnswers] = useState({});
+  const [answers, setAnswers] = useState({
+    'age': [0],
+    'feeling.nervous': [0],
+    'panic': [0],
+    'breathing.rapidly': [0],
+    'sweating': [0],
+    'trouble.in.concentration': [0],
+    'trouble.sleeping': [0],
+    'trouble.with.work': [0],
+    'hopelessness': [0],
+    'anger': [0],
+    'over.react': [0],
+    'change.in.eating': [0],
+    'suicidal.thought': [0],
+    'feeling.tired': [0],
+    'close.friend': [0],
+    'social.media.addiction': [0],
+    'weight.gain': [0],
+    'introvert': [0],
+    'popping.up.stressful.memory': [0],
+    'nightmares': [0],
+    'avoids.people.or.activities': [0],
+    'feeling.negative': [0],
+    'trouble.concentrating': [0],
+    'blaming.yourself': [0],
+    'hallucinations': [0],
+    'repetitive.behavior': [0],
+    'seasonally': [0],
+    'increased.energy': [0],
+  });
+  
 
   const handleAnswer = (question, answer) => {
-    // Convert 'yes' to 1 and 'no' to 0
-    const answerValue = answer === 'yes' ? 1 : 0;
-    setAnswers((prev) => ({ ...prev, [questionsList[step]]: answerValue }));
-
-    if (answer === 'yes' || answer === 'no') {
-      setStep(step + 1);
+    if (step === 0) {
+      // Handle the age question separately
+      setAnswers((prevAnswers) => ({ ...prevAnswers, age: [parseInt(answer, 10)] }));
+      setStep(step + 1); // Move to the next question
     } else {
-      setStep(step - 1);
+      // Handle other questions as before
+      const answerValue = answer === 'yes' ? 1 : 0;
+      setAnswers((prevAnswers) => ({ ...prevAnswers, [question]: [answerValue] }));
+      if (answer === 'yes' || answer === 'no') {
+        setStep(step + 1);
+      } else {
+        setStep(step - 1);
+      }
     }
   };
+  
+  
+  const [age, setAge] = useState('');
 
   return (
     <div className="flex flex-col h-screen justify-center items-center space-y-4 App bg-cover bg-center" style={{ backgroundImage: `url(${BG})` }}>
@@ -76,40 +115,50 @@ const Assessment = () => {
       </div>
 
       {/* Main Content */}
-      {step < questionsList.length ? (
-        <div className="text-center w-full flex flex-col items-center">
+      <div className="text-center w-full flex flex-col items-center">
+        {step === 0 ? ( // Render the age input field for the first question
+           <div>
+            <label htmlFor="age" className="textwhite text-2xl">
+              {questionsList[step]}?
+            </label>
+            <input
+              type="number"
+              id="age"
+              value={age}
+              onChange={(e) => setAge(e.target.value)}
+            />
+            <button
+              className="p-2 bg-blue-500 text-white"
+              onClick={() => {
+                // Store the age response and move to the next question
+                handleAnswer(questionsList[step], age);
+                setAge(''); // Clear the age input field
+              }}
+            >
+              Next
+            </button>
+          </div>
+        ) : (
           <div className="bg-black bg-opacity-50 font-bold p-5 rounded-md py-60 w-3/4">
             <p className="textwhite text-2xl">{questionsList[step]}?</p>
           </div>
-          
-          <div className="mt-4">
-            <button
-              className="p-2 mr-2 bg-blue-500 text-white"
-              onClick={() => handleAnswer(questionsList[step], 'yes')}
-            >
-              Yes
-            </button>
-            <button
-              className="p-2 bg-red-500 text-white"
-              onClick={() => handleAnswer(questionsList[step], 'no')}
-            >
-              No
-            </button>
-          </div>
-        </div>
-      ) : (<div>
-        <div>
-          <p>Thanks for completing the assessment!</p>
-          <a href='/diagnosis/:id'> View Results</a>
-        </div>
-        <div>
-        {Object.entries(answers).map(([question, answer]) => (
-            <div key={question}>
-                <strong>{question}:</strong> {answer}
-            </div>
-        ))}
-          </div></div>
-      )}
+  )}
+  
+  <div className="mt-4">
+    <button
+      className="p-2 mr-2 bg-blue-500 text-white"
+      onClick={() => handleAnswer(questionsList[step], 'yes')}
+    >
+      Yes
+    </button>
+    <button
+      className="p-2 bg-red-500 text-white"
+      onClick={() => handleAnswer(questionsList[step], 'no')}
+    >
+      No
+    </button>
+  </div>
+</div>
     </div>
   
   );
