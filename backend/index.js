@@ -6,6 +6,7 @@ const DB = require('./queries');
 const bcrypt = require('bcrypt');
 const Pool = require('pg').Pool
 const jwt = require('jsonwebtoken');
+
 const pool = new Pool({
     user: 'postgres',
     host: 'localhost',
@@ -115,4 +116,5 @@ app.post('/login', async (req, res) => {
 
 //END AUTH 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+
 app.get('/users', DB.getUsers)

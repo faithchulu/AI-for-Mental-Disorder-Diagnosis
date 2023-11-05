@@ -2,7 +2,9 @@ import React from 'react'
 
 const viewPastDiagnosis = () => {
   return (
-    <div>viewPastDiagnosis</div>
+    <div className='centre'>
+      viewPastDiagnoses
+    </div>
   )
 }
 

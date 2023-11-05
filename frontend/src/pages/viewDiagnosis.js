@@ -6,4 +6,6 @@ const viewDiagnosis = () => {
   )
 }
 
+
+
 export default viewDiagnosis
