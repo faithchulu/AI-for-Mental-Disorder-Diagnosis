@@ -70,6 +70,7 @@ const Assessment = () => {
     'increased.energy': [0],
   });
   
+  const [age, setAge] = useState('');
 
   const handleAnswer = (question, answer) => {
     if (step === 0) {
@@ -87,19 +88,17 @@ const Assessment = () => {
       }
     }
   };
-  
-  
-  const [age, setAge] = useState('');
 
   return (
     <div className="flex flex-col h-screen justify-center items-center space-y-4 App bg-cover bg-center" style={{ backgroundImage: `url(${BG})` }}>
-      
       {/* Top navigation section */}
-      <div className="absolute top-0 left-0 m-4">
-        {step >= 0 && <FaArrowLeft onClick={() => handleAnswer(questionsList[step], 'back')} />}
-      </div>
-      
-      <div className=" w-full flex justify-center items-center mt-4">
+      {step >= 0 && (
+        <div className="absolute top-0 left-0 m-4">
+          <FaArrowLeft onClick={() => handleAnswer(questionsList[step], 'back')} />
+        </div>
+      )}
+
+      <div className="w-full flex justify-center items-center mt-4">
         {/* Progress bar */}
         <div className="h-1 bg-gray-300 w-2/3 relative">
           <div className="h-1 bg-green-500" style={{ width: `${(step / questionsList.length) * 100}%` }}></div>
@@ -115,52 +114,59 @@ const Assessment = () => {
       </div>
 
       {/* Main Content */}
-      <div className="text-center w-full flex flex-col items-center">
-        {step === 0 ? ( // Render the age input field for the first question
-           <div>
-            <label htmlFor="age" className="textwhite text-2xl">
-              {questionsList[step]}?
-            </label>
-            <input
-              type="number"
-              id="age"
-              value={age}
-              onChange={(e) => setAge(e.target.value)}
-            />
-            <button
-              className="p-2 bg-blue-500 text-white"
-              onClick={() => {
-                // Store the age response and move to the next question
-                handleAnswer(questionsList[step], age);
-                setAge(''); // Clear the age input field
-              }}
-            >
-              Next
-            </button>
-          </div>
-        ) : (
-          <div className="bg-black bg-opacity-50 font-bold p-5 rounded-md py-60 w-3/4">
-            <p className="textwhite text-2xl">{questionsList[step]}?</p>
-          </div>
-  )}
-  
-  <div className="mt-4">
-    <button
-      className="p-2 mr-2 bg-blue-500 text-white"
-      onClick={() => handleAnswer(questionsList[step], 'yes')}
-    >
-      Yes
-    </button>
-    <button
-      className="p-2 bg-red-500 text-white"
-      onClick={() => handleAnswer(questionsList[step], 'no')}
-    >
-      No
-    </button>
-  </div>
-</div>
+      {step === questionsList.length ? (
+        <div className="text-center">
+          <p>Thank you for taking the assessment!</p>
+          <a href="/viewresults">View Results</a>
+        </div>
+      ) : (
+        <div className="text-center w-full flex flex-col items-center">
+          {step === 0 ? (
+            <div className="bg-black bg-opacity-50 font-bold p-5 rounded-md py-60 w-3/4">
+              <label htmlFor="age" className="textwhite text-2xl">
+                {questionsList[step]}?
+              </label>
+              <input
+                type="number"
+                id="age"
+                value={age}
+                onChange={(e) => setAge(e.target.value)}
+              />
+              <button
+                className="p-2 bg-blue-500 text-white"
+                onClick={() => {
+                  // Store the age response and move to the next question
+                  handleAnswer(questionsList[step], age);
+                  setAge(''); // Clear the age input field
+                }}
+              >
+                Next
+              </button>
+            </div>
+          ) : (
+            <div className="bg-black bg-opacity-50 font-bold p-5 rounded-md py-60 w-3/4">
+              <p className="textwhite text-2xl">{questionsList[step]}?</p>
+            </div>
+          )}
+          {step !== 0 && (
+            <div className="mt-4">
+              <button
+                className="p-2 mr-2 bg-blue-500 text-white"
+                onClick={() => handleAnswer(questionsList[step], 'yes')}
+              >
+                Yes
+              </button>
+              <button
+                className="p-2 bg-red-500 text-white"
+                onClick={() => handleAnswer(questionsList[step], 'no')}
+              >
+                No
+              </button>
+            </div>
+          )}
+        </div>
+      )}
     </div>
-  
   );
 };
 

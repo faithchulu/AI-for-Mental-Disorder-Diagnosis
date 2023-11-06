@@ -5,7 +5,7 @@ import pandas as pd
 model = joblib.load('decision_tree_model.pkl')
 
 data = {
-    'age' : [22],
+    'age' : [39],
 'feeling.nervous' : [0],
 'panic' : [0],
 'breathing.rapidly' : [0],
@@ -35,11 +35,35 @@ data = {
 'increased.energy' : [1],
 }
 
-# Prepare new data (replace with your actual data)
+
+# Prepare new data
 new_data = pd.DataFrame(data)
 
 # Make predictions
 predictions = model.predict(new_data)
 
-# Print the predictions
-print(predictions)
+# Define the list of disorder names in the same order as the binary digits
+disorder_names = [
+    'ADHD',
+    'ASD',
+    'Loneliness',
+    'MDD',
+    'OCD',
+    'PDD',
+    'PTSD',
+    'anxiety',
+    'bipolar',
+    'eating disorder',
+    'psychotic depression',
+    'sleeping disorder'
+]
+
+
+# Map binary digit positions to disorder name
+predicted_disorder = [disorder_names[i] for i, prediction in enumerate(predictions[0]) if prediction == 1]
+
+# Combine the predicted disorders into a single string
+predicted_disorder_string = ', '.join(predicted_disorder)
+
+# Print the predicted disorders as a single string
+print("Predicted Disorders:", predicted_disorder_string)
