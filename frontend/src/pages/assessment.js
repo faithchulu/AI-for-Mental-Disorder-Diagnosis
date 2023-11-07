@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { FaArrowLeft } from 'react-icons/fa';
 import logo from "../assets/images/logos/logo5.png"
 import BG from "../assets/images/image6.jpg"
+import { Link } from 'react-router-dom';
 
 
 const questionsList = [
@@ -39,55 +40,50 @@ const questionsList = [
 
 const Assessment = () => {
   const [step, setStep] = useState(0);
-  const [answers, setAnswers] = useState({
-    'age': [0],
-    'feeling.nervous': [0],
-    'panic': [0],
-    'breathing.rapidly': [0],
-    'sweating': [0],
-    'trouble.in.concentration': [0],
-    'trouble.sleeping': [0],
-    'trouble.with.work': [0],
-    'hopelessness': [0],
-    'anger': [0],
-    'over.react': [0],
-    'change.in.eating': [0],
-    'suicidal.thought': [0],
-    'feeling.tired': [0],
-    'close.friend': [0],
-    'social.media.addiction': [0],
-    'weight.gain': [0],
-    'introvert': [0],
-    'popping.up.stressful.memory': [0],
-    'nightmares': [0],
-    'avoids.people.or.activities': [0],
-    'feeling.negative': [0],
-    'trouble.concentrating': [0],
-    'blaming.yourself': [0],
-    'hallucinations': [0],
-    'repetitive.behavior': [0],
-    'seasonally': [0],
-    'increased.energy': [0],
-  });
-  
   const [age, setAge] = useState('');
+  const [userResponses, setUserResponses] = useState([]);
 
   const handleAnswer = (question, answer) => {
     if (step === 0) {
       // Handle the age question separately
-      setAnswers((prevAnswers) => ({ ...prevAnswers, age: [parseInt(answer, 10)] }));
+      const ageValue = parseInt(answer, 10); 
+      setAge(ageValue);
+      setUserResponses((prevResponses) => [ageValue, ...prevResponses]);
       setStep(step + 1); // Move to the next question
     } else {
       // Handle other questions as before
       const answerValue = answer === 'yes' ? 1 : 0;
-      setAnswers((prevAnswers) => ({ ...prevAnswers, [question]: [answerValue] }));
+      setUserResponses((prevResponses) => [...prevResponses, answerValue]);
       if (answer === 'yes' || answer === 'no') {
         setStep(step + 1);
       } else {
         setStep(step - 1);
       }
     }
+    if (step === questionsList.length - 1) {
+      console.log('Sending userResponses:', userResponses);
+
+      // If this is the last question, post userResponses to the server
+      fetch('http://localhost:5000/userresponses', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          responseArray: userResponses,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data); // You can handle the response as needed
+        })
+        .catch((error) => {
+          console.error('Error posting user responses:', error);
+        });
+    }
   };
+
+  
 
   return (
     <div className="flex flex-col h-screen justify-center items-center space-y-4 App bg-cover bg-center" style={{ backgroundImage: `url(${BG})` }}>
@@ -116,24 +112,44 @@ const Assessment = () => {
       {/* Main Content */}
       {step === questionsList.length ? (
         <div className="text-center">
-          <p>Thank you for taking the assessment!</p>
-          <a href="/viewresults">View Results</a>
+          <h1 className='font-bold my-4'>Thank you for taking the assessment!</h1>
+          
+          <Link to='/diagnosis'>
+            <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded my-4">
+              View Results
+            </button>
+          </Link>  
+
+          {/* Display user responses */}
+          <div className="user-responses">
+            {/* <h2>User Responses:</h2> */}
+            <ul>
+              {/* <li>Age: {age}</li> */}
+              {questionsList.map((question, index) => (
+                <li key={index}>
+                  {/* {question}: {userResponses[index]} */}
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       ) : (
         <div className="text-center w-full flex flex-col items-center">
           {step === 0 ? (
             <div className="bg-black bg-opacity-50 font-bold p-5 rounded-md py-60 w-3/4">
-              <label htmlFor="age" className="textwhite text-2xl">
+            <div className='flex flex-col items-center'> 
+              <label htmlFor="age" className="textwhite text-2xl mb-2">
                 {questionsList[step]}?
               </label>
               <input
                 type="number"
                 id="age"
+                className='mb-2'
                 value={age}
                 onChange={(e) => setAge(e.target.value)}
               />
               <button
-                className="p-2 bg-blue-500 text-white"
+                className="p-2 bg-green-500 text-white"
                 onClick={() => {
                   // Store the age response and move to the next question
                   handleAnswer(questionsList[step], age);
@@ -142,16 +158,18 @@ const Assessment = () => {
               >
                 Next
               </button>
+              </div>
+
             </div>
           ) : (
             <div className="bg-black bg-opacity-50 font-bold p-5 rounded-md py-60 w-3/4">
-              <p className="textwhite text-2xl">{questionsList[step]}?</p>
+              <p className="text-white text-2xl">{questionsList[step]}?</p>
             </div>
           )}
           {step !== 0 && (
             <div className="mt-4">
               <button
-                className="p-2 mr-2 bg-blue-500 text-white"
+                className="p-2 mr-2 bg-green-500 text-white"
                 onClick={() => handleAnswer(questionsList[step], 'yes')}
               >
                 Yes

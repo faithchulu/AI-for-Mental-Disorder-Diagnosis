@@ -117,4 +117,33 @@ app.post('/login', async (req, res) => {
 //END AUTH 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
+// STORE RESPONSES
+app.post('/userresponses', async (req, res) => {
+  try {
+    // Get the user responses data from the request body
+    const { responseArray } = req.body;
+
+    if (!responseArray || !Array.isArray(responseArray)) {
+      return res.status(400).json({ error: 'Invalid user responses data.' });
+    }
+
+    // Insert the user responses array into the PostgreSQL table
+    const query = 'INSERT INTO userresponses (responseArray) VALUES ($1) RETURNING responseID';
+    const values = [responseArray];
+
+    const result = await pool.query(query, values);
+
+    if (result.rows.length > 0) {
+      const responseID = result.rows[0].responseID;
+      res.status(201).json({ message: 'User responses stored successfully', responseID });
+    } else {
+      res.status(500).json({ error: 'Failed to store user responses.' });
+    }
+  } catch (error) {
+    console.error('Error while storing user responses:', error);
+    res.status(500).json({ error: 'Internal Server Error', details: error.message });
+  }
+});
+
+
 app.get('/users', DB.getUsers)

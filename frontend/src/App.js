@@ -13,7 +13,8 @@ function App() {
         <Route index element = {< Login/>}/>
         <Route path="/assessment" element={< Assessment/>}/>
         <Route path="/home" element={<LandingPage/>}/>
-        <Route path="/diagnosis/:id" element={< ViewDiagnosis/>}/>
+        {/* <Route path="/diagnosis/:id" element={< ViewDiagnosis/>}/> */}
+        <Route path="/diagnosis" element={< ViewDiagnosis/>}/>
         <Route path="/diagnoses" element={< ViewPastDiagnosis/>} />
       </Routes>
     </BrowserRouter>
