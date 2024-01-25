@@ -10,7 +10,7 @@ function App() {
     <div>
     <BrowserRouter>
       <Routes>
-        <Route index element = {< Login/>}/>
+        <Route index element = {< LandingPage/>}/>
         <Route path="/assessment" element={< Assessment/>}/>
         <Route path="/home" element={<LandingPage/>}/>
         {/* <Route path="/diagnosis/:id" element={< ViewDiagnosis/>}/> */}

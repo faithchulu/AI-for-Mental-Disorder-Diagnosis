@@ -136,7 +136,7 @@ const Assessment = () => {
       ) : (
         <div className="text-center w-full flex flex-col items-center">
           {step === 0 ? (
-            <div className="bg-black bg-opacity-50 font-bold p-5 rounded-md py-60 w-3/4">
+            <div className="bg-black bg-opacity-50 font-bold p-5 rounded-md py-40 w-3/4">
             <div className='flex flex-col items-center'> 
               <label htmlFor="age" className="textwhite text-2xl mb-2">
                 {questionsList[step]}?
@@ -162,7 +162,7 @@ const Assessment = () => {
 
             </div>
           ) : (
-            <div className="bg-black bg-opacity-50 font-bold p-5 rounded-md py-60 w-3/4">
+            <div className="bg-black bg-opacity-50 font-bold p-5 rounded-md py-40 w-3/4">
               <p className="text-white text-2xl">{questionsList[step]}?</p>
             </div>
           )}
